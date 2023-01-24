@@ -25,7 +25,7 @@ final class GradleExternalCnf {
 
 			final Document document = XmlDomUtils.createNewDocument();
 			final Element documentElement = document.createElement("launchConfiguration");
-			documentElement.setAttribute("type", "org.eclipse.buildship.core.launch.runconfiguration");
+			documentElement.setAttribute("type", "org.eclipse.ui.externaltools.ProgramLaunchConfigurationType");
 
 			EclipseRunCnfUtils.writeEclipseRunCnfAttribute("listAttribute", "org.eclipse.debug.ui.favoriteGroups",
 					null, new String[] { "org.eclipse.ui.externaltools.launchGroup" }, documentElement);

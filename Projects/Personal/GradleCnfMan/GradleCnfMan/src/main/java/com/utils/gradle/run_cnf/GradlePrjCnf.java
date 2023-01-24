@@ -17,17 +17,20 @@ import com.utils.xml.dom.XmlDomUtils;
 
 class GradlePrjCnf {
 
+	private final boolean rootProject;
 	private final String gradlePrjName;
 	private final String gradlePrjPathString;
 	private final List<GradleGradleCnf> gradleGradleCnfList;
 	private final List<GradleTestCnf> gradleTestCnfList;
 
 	GradlePrjCnf(
+			final boolean rootProject,
 			final String gradlePrjName,
 			final String gradlePrjPathString,
 			final List<GradleGradleCnf> gradleGradleCnfList,
 			final List<GradleTestCnf> gradleTestCnfList) {
 
+		this.rootProject = rootProject;
 		this.gradlePrjName = gradlePrjName;
 		this.gradlePrjPathString = gradlePrjPathString;
 		this.gradleGradleCnfList = gradleGradleCnfList;
@@ -51,7 +54,9 @@ class GradlePrjCnf {
 			Logger.printProgress("writing Eclipse run cnf files for module:");
 			Logger.printLine(gradlePrjPathString);
 
-			GradleExternalCnf.writeEclipseExternalCnfFile(gradlePrjName, runCnfFolderPathString);
+			if (rootProject) {
+				GradleExternalCnf.writeEclipseExternalCnfFile(gradlePrjName, runCnfFolderPathString);
+			}
 
 			for (final GradleGradleCnf gradleGradleCnf : gradleGradleCnfList) {
 				gradleGradleCnf.writeEclipseRunCnfFile(gradlePrjName, runCnfFolderPathString);

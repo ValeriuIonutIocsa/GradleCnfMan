@@ -52,14 +52,14 @@ public final class RunCnfCreator {
 			final List<GradlePrjCnf> gradlePrjCnfList = new ArrayList<>();
 
 			final GradlePrjCnf rootGradlePrjCnf =
-					createGradlePrjCnf(rootPrjPathString, javaParser);
+					createGradlePrjCnf(true, rootPrjPathString, javaParser);
 			gradlePrjCnfList.add(rootGradlePrjCnf);
 
 			for (final GradleSubProject gradleSubProject : gradleSubProjectList) {
 
 				final String gradleSubProjectPathString = gradleSubProject.getPath();
 				final GradlePrjCnf gradlePrjCnf =
-						createGradlePrjCnf(gradleSubProjectPathString, javaParser);
+						createGradlePrjCnf(false, gradleSubProjectPathString, javaParser);
 				gradlePrjCnfList.add(gradlePrjCnf);
 			}
 
@@ -134,6 +134,7 @@ public final class RunCnfCreator {
 	}
 
 	private static GradlePrjCnf createGradlePrjCnf(
+			final boolean rootProject,
 			final String gradlePrjPathString,
 			final JavaParser javaParser) {
 
@@ -156,7 +157,8 @@ public final class RunCnfCreator {
 			}
 		}
 
-		return new GradlePrjCnf(gradlePrjName, gradlePrjPathString, gradleGradleCnfList, gradleTestCnfList);
+		return new GradlePrjCnf(rootProject, gradlePrjName, gradlePrjPathString,
+				gradleGradleCnfList, gradleTestCnfList);
 	}
 
 	private static void parseJavaFile(

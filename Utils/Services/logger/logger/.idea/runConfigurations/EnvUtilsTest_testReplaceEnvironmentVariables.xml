@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="JUnit" name="EnvUtilsTest.testReplaceEnvironmentVariables" nameIsGenerated="true" type="JUnit">
+        <module name="logger"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.utils.string.replacements.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.utils.string"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.string.EnvUtilsTest"/>
+        <option name="METHOD_NAME" value="testReplaceEnvironmentVariables"/>
+        <option name="TEST_OBJECT" value="method"/>
+        <option name="PARAMETERS" value=""/>
+        <envs>
+            <env name="ENV1" value="1111"/>
+            <env name="ENV2" value="2222"/>
+            <env name="ENV3" value="3333"/>
+        </envs>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+    </configuration>
+</component>

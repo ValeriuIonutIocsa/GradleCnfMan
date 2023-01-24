@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" factoryName="JUnit" folderName="GradleCnfMan" name="GradleTestCnfTest.testWriteIdeaRunCnfFile" nameIsGenerated="true" type="JUnit">
+        <module name="GradleCnfManAllModules.GradleCnfMan.test"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.utils.gradle.run_cnf.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <option name="PACKAGE_NAME" value="com.utils.gradle.run_cnf"/>
+        <option name="MAIN_CLASS_NAME" value="com.utils.gradle.run_cnf.GradleTestCnfTest"/>
+        <option name="METHOD_NAME" value="testWriteIdeaRunCnfFile"/>
+        <option name="TEST_OBJECT" value="method"/>
+        <method v="2">
+            <option enabled="true" name="Make"/>
+        </method>
+    </configuration>
+</component>

@@ -139,6 +139,11 @@ public final class RunCnfCreator {
 
 		final Path gradlePrjPath = Paths.get(gradlePrjPathString);
 		final String gradlePrjName = PathUtils.computeFileName(gradlePrjPath);
+
+		final List<GradleGradleCnf> gradleGradleCnfList = new ArrayList<>();
+		gradleGradleCnfList.add(new GradleGradleCnf(new String[] { "clean" }));
+		gradleGradleCnfList.add(new GradleGradleCnf(new String[] { "fatJar", "sourcesJar" }));
+
 		final List<GradleTestCnf> gradleTestCnfList = new ArrayList<>();
 		final String testJavaFolderPathString =
 				PathUtils.computePath(gradlePrjPathString, "src", "test", "java");
@@ -151,7 +156,7 @@ public final class RunCnfCreator {
 			}
 		}
 
-		return new GradlePrjCnf(gradlePrjName, gradlePrjPathString, gradleTestCnfList);
+		return new GradlePrjCnf(gradlePrjName, gradlePrjPathString, gradleGradleCnfList, gradleTestCnfList);
 	}
 
 	private static void parseJavaFile(

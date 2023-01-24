@@ -30,7 +30,7 @@ class GradleTestCnf {
 
 		final String eclipseRunCnfFileName = createEclipseRunCnfFileName();
 		try {
-			Logger.printProgress("creating Eclipse run cnf file:");
+			Logger.printProgress("creating Eclipse test run cnf file:");
 			Logger.printLine(eclipseRunCnfFileName);
 
 			final String runCnfFilePathString =
@@ -161,7 +161,7 @@ class GradleTestCnf {
 		final String runCnfFilePathString =
 				PathUtils.computePath(runCnfFolderPathString, runCnfFileName);
 		try {
-			Logger.printProgress("writing IntelliJ Idea run cnf file:");
+			Logger.printProgress("writing IntelliJ Idea test run cnf file:");
 			Logger.printLine(runCnfFilePathString);
 
 			final Document document = XmlDomUtils.createNewDocument();

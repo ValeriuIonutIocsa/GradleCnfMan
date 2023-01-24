@@ -19,15 +19,18 @@ class GradlePrjCnf {
 
 	private final String gradlePrjName;
 	private final String gradlePrjPathString;
+	private final List<GradleGradleCnf> gradleGradleCnfList;
 	private final List<GradleTestCnf> gradleTestCnfList;
 
 	GradlePrjCnf(
 			final String gradlePrjName,
 			final String gradlePrjPathString,
+			final List<GradleGradleCnf> gradleGradleCnfList,
 			final List<GradleTestCnf> gradleTestCnfList) {
 
 		this.gradlePrjName = gradlePrjName;
 		this.gradlePrjPathString = gradlePrjPathString;
+		this.gradleGradleCnfList = gradleGradleCnfList;
 		this.gradleTestCnfList = gradleTestCnfList;
 	}
 
@@ -47,6 +50,12 @@ class GradlePrjCnf {
 			Logger.printNewLine();
 			Logger.printProgress("writing Eclipse run cnf files for module:");
 			Logger.printLine(gradlePrjPathString);
+
+			GradleExternalCnf.writeEclipseExternalCnfFile(gradlePrjName, runCnfFolderPathString);
+
+			for (final GradleGradleCnf gradleGradleCnf : gradleGradleCnfList) {
+				gradleGradleCnf.writeEclipseRunCnfFile(gradlePrjName, runCnfFolderPathString);
+			}
 
 			for (final GradleTestCnf gradleTestCnf : gradleTestCnfList) {
 				gradleTestCnf.writeEclipseRunCnfFile(gradlePrjName, runCnfFolderPathString);
@@ -118,9 +127,13 @@ class GradlePrjCnf {
 			final String rootPrjName,
 			final String runCnfFolderPathString) {
 
-        Logger.printNewLine();
-        Logger.printProgress("writing IntelliJ Idea run cnf files for module:");
-        Logger.printLine(gradlePrjPathString);
+		Logger.printNewLine();
+		Logger.printProgress("writing IntelliJ Idea run cnf files for module:");
+		Logger.printLine(gradlePrjPathString);
+
+		for (final GradleGradleCnf gradleGradleCnf : gradleGradleCnfList) {
+			gradleGradleCnf.writeIdeaGradleCnfFile(gradlePrjName, runCnfFolderPathString);
+		}
 
 		for (final GradleTestCnf gradleTestCnf : gradleTestCnfList) {
 			gradleTestCnf.writeIdeaRunCnfFile(rootPrjName, gradlePrjName, runCnfFolderPathString);

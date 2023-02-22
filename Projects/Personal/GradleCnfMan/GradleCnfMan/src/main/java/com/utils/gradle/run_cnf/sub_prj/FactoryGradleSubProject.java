@@ -31,16 +31,19 @@ public final class FactoryGradleSubProject {
 			commandList.add(gradleWrapperPathString);
 			commandList.add("subProjectDependencyTree");
 
+			final Process process = new ProcessBuilder(commandList)
+					.directory(new File(rootProjectPathString))
+					.redirectErrorStream(true)
+					.start();
+
+			final InputStream inputStream = process.getInputStream();
 			final ReadBytesHandlerLinesCollect readBytesHandlerLinesCollect =
 					new ReadBytesHandlerLinesCollect();
-			final ProcessBuilder processBuilder = new ProcessBuilder(commandList);
-			processBuilder.directory(new File(rootProjectPathString));
-			final Process process = processBuilder.start();
-			final InputStream inputStream = process.getInputStream();
 			final InputStreamReaderThread inputStreamReaderThread =
 					new InputStreamReaderThread("subProjectDependencyTree input stream reader",
 							inputStream, StandardCharsets.UTF_8, readBytesHandlerLinesCollect);
 			inputStreamReaderThread.start();
+
 			process.waitFor();
 			inputStreamReaderThread.join();
 

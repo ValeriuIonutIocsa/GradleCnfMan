@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/../../../../Utils/Services/concurrency-utils/concurrency-utils" />
             <option value="$PROJECT_DIR$/../../../../Utils/Services/io-utils/io-utils" />
             <option value="$PROJECT_DIR$/../../../../Utils/Services/logger/logger" />
+            <option value="$PROJECT_DIR$/../../../../Utils/Services/test-utils/test-utils" />
             <option value="$PROJECT_DIR$/../../../../Utils/Services/xml-utils/xml-utils" />
           </set>
         </option>

@@ -2,7 +2,6 @@ package com.utils.string.regex;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
 
 import com.utils.annotations.ApiMethod;
@@ -49,13 +48,11 @@ public final class FactoryPatternWithCase {
 		final boolean patternCaseSensitive = Boolean.parseBoolean(patternCaseSensitiveString);
 
 		final String patternString = element.getAttribute(attributeName);
-		if (StringUtils.isNotBlank(patternString)) {
-
-			final Pattern pattern = RegexUtils.tryCompile(patternString, patternCaseSensitive);
-			if (pattern != null) {
-				patternWithCase = new PatternWithCase(pattern);
-			}
+		final Pattern pattern = RegexUtils.tryCompile(patternString, patternCaseSensitive);
+		if (pattern != null) {
+			patternWithCase = new PatternWithCase(pattern);
 		}
+
 		return patternWithCase;
 	}
 

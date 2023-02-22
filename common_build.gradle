@@ -118,7 +118,7 @@ task fatJar(type: Jar, dependsOn: compileJava) {
     } catch (Exception ignored) {
     }
 
-    classifier = 'all'
+    archiveClassifier.set('all')
     from {
         final projects = createProjectAndDependenciesList(project)
         projects.collect {
@@ -185,7 +185,7 @@ task sourcesJar(type: Jar) {
     } catch (Exception ignored) {
     }
 
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from {
         final projects = createProjectAndDependenciesList(project)
         projects.collect { it.sourceSets.main.allSource }
@@ -219,9 +219,11 @@ File createOtherDestDir() {
         if (jarFolder.isDirectory()) {
             otherDestDir = jarFolder
         } else {
-            boolean jarFolderCreated = jarFolder.mkdir()
+            boolean jarFolderCreated = jarFolder.mkdirs()
             if (jarFolderCreated) {
                 otherDestDir = jarFolder
+            } else {
+                println 'failed to create JAR folder'
             }
         }
     }

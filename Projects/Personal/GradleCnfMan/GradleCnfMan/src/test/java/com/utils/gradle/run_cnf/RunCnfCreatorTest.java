@@ -8,7 +8,7 @@ class RunCnfCreatorTest {
 	void testWork() {
 
 		final String rootProjectPathString;
-		final int input = Integer.parseInt("1");
+		final int input = Integer.parseInt("31");
 		if (input == 1) {
 			rootProjectPathString =
 					"C:\\IVI\\Prog\\JavaGradle\\Scripts\\General\\GradleCnfMan\\" +
@@ -24,6 +24,11 @@ class RunCnfCreatorTest {
 		} else if (input == 21) {
 			rootProjectPathString =
 					"C:\\IVI\\Conti\\Main\\Projects\\ADV\\ConsistencyNeedAnalyzer\\ConsistencyNeedAnalyzer";
+
+		} else if (input == 31) {
+			rootProjectPathString =
+					"C:\\IVI\\Prog\\JavaGradle\\Scripts\\General\\" +
+							"CSInit\\Projects\\Personal\\CSInitAllModules\\CSInitAllModules";
 
 		} else {
 			throw new RuntimeException();

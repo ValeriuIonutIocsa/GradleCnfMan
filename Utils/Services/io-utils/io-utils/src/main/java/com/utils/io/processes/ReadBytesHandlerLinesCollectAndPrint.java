@@ -3,11 +3,13 @@ package com.utils.io.processes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadBytesHandlerLinesCollect extends AbstractReadBytesHandlerLines {
+import com.utils.log.Logger;
+
+public class ReadBytesHandlerLinesCollectAndPrint extends AbstractReadBytesHandlerLines {
 
 	private final List<String> lineList;
 
-	public ReadBytesHandlerLinesCollect() {
+	public ReadBytesHandlerLinesCollectAndPrint() {
 
 		lineList = new ArrayList<>();
 	}
@@ -15,6 +17,8 @@ public class ReadBytesHandlerLinesCollect extends AbstractReadBytesHandlerLines 
 	@Override
 	protected void handleLine(
 			final String line) {
+
+		Logger.printLine(line);
 		lineList.add(line);
 	}
 

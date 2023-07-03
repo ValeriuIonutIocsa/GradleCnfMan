@@ -70,7 +70,7 @@ public final class RunCnfCreator {
 			final String runCnfFolderPathString =
 					PathUtils.computePath(rootPrjPathString, ".idea", "runConfigurations");
 			final boolean success = FactoryFolderCreator.getInstance()
-					.createDirectories(runCnfFolderPathString, true);
+					.createDirectories(runCnfFolderPathString, false, true);
 			if (success) {
 
 				deleteExistingIdeaRunCnfFiles(gradlePrjCnfList, runCnfFolderPathString);
@@ -107,7 +107,7 @@ public final class RunCnfCreator {
 
 					Logger.printProgress("deleting IntelliJ Idea run cnf file:");
 					Logger.printLine(ideaRunCnfFilePathString);
-					FactoryFileDeleter.getInstance().deleteFile(ideaRunCnfFilePathString, true);
+					FactoryFileDeleter.getInstance().deleteFile(ideaRunCnfFilePathString, false, true);
 				}
 			}
 		}

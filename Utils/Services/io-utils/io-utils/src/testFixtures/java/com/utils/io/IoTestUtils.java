@@ -1,6 +1,7 @@
 package com.utils.io;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,8 @@ public final class IoTestUtils {
 		final List<String> filePathStringList;
 		final boolean folderExists = IoUtils.directoryExists(folderPathString);
 		if (folderExists) {
-			filePathStringList = ListFileUtils.listFilesRecursively(folderPathString);
+			filePathStringList =
+					ListFileUtils.listFilesRecursively(folderPathString, Files::isRegularFile);
 		} else {
 			filePathStringList = new ArrayList<>();
 		}
@@ -36,13 +38,41 @@ public final class IoTestUtils {
 		final Set<String> matchedOtherFilePathStringSet = new HashSet<>();
 		for (final String filePathString : filePathStringList) {
 
-			if (!IoUtils.directoryExists(filePathString)) {
+			final String relativePathString =
+					PathUtils.computeRelativePath(folderPathString, filePathString);
+			final String otherFilePathString =
+					PathUtils.computePath(otherFolderPathString, relativePathString);
+			matchedOtherFilePathStringSet.add(otherFilePathString);
+
+			final boolean contentEquals =
+					FileUtils.contentEquals(new File(filePathString), new File(otherFilePathString));
+			if (!contentEquals) {
+				Logger.printWarning("The following files are different:" +
+						System.lineSeparator() + filePathString +
+						System.lineSeparator() + otherFilePathString);
+			}
+
+			final FileCompareData fileCompareData = new FileCompareData(
+					filePathString, otherFilePathString, contentEquals);
+			fileCompareDataList.add(fileCompareData);
+		}
+
+		final List<String> otherFilePathStringList;
+		final boolean otherFolderExists = IoUtils.directoryExists(otherFolderPathString);
+		if (otherFolderExists) {
+			otherFilePathStringList =
+					ListFileUtils.listFilesRecursively(otherFolderPathString, Files::isRegularFile);
+		} else {
+			otherFilePathStringList = new ArrayList<>();
+		}
+
+		for (final String otherFilePathString : otherFilePathStringList) {
+
+			if (!matchedOtherFilePathStringSet.contains(otherFilePathString)) {
 
 				final String relativePathString =
-						PathUtils.computeRelativePath(folderPathString, filePathString);
-				final String otherFilePathString =
-						PathUtils.computePath(otherFolderPathString, relativePathString);
-				matchedOtherFilePathStringSet.add(otherFilePathString);
+						PathUtils.computeRelativePath(otherFolderPathString, otherFilePathString);
+				final String filePathString = PathUtils.computePath(folderPathString, relativePathString);
 
 				final boolean contentEquals =
 						FileUtils.contentEquals(new File(filePathString), new File(otherFilePathString));
@@ -55,39 +85,6 @@ public final class IoTestUtils {
 				final FileCompareData fileCompareData = new FileCompareData(
 						filePathString, otherFilePathString, contentEquals);
 				fileCompareDataList.add(fileCompareData);
-			}
-		}
-
-		final List<String> otherFilePathStringList;
-		final boolean otherFolderExists = IoUtils.directoryExists(otherFolderPathString);
-		if (otherFolderExists) {
-			otherFilePathStringList = ListFileUtils.listFilesRecursively(otherFolderPathString);
-		} else {
-			otherFilePathStringList = new ArrayList<>();
-		}
-
-		for (final String otherFilePathString : otherFilePathStringList) {
-
-			if (!IoUtils.directoryExists(otherFilePathString)) {
-
-				if (!matchedOtherFilePathStringSet.contains(otherFilePathString)) {
-
-					final String relativePathString =
-							PathUtils.computeRelativePath(otherFolderPathString, otherFilePathString);
-					final String filePathString = PathUtils.computePath(folderPathString, relativePathString);
-
-					final boolean contentEquals =
-							FileUtils.contentEquals(new File(filePathString), new File(otherFilePathString));
-					if (!contentEquals) {
-						Logger.printWarning("The following files are different:" +
-								System.lineSeparator() + filePathString +
-								System.lineSeparator() + otherFilePathString);
-					}
-
-					final FileCompareData fileCompareData = new FileCompareData(
-							filePathString, otherFilePathString, contentEquals);
-					fileCompareDataList.add(fileCompareData);
-				}
 			}
 		}
 	}

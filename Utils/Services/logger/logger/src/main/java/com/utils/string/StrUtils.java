@@ -46,6 +46,52 @@ public final class StrUtils {
 		return yesNoString;
 	}
 
+	/**
+	 * @param n
+	 *            Integer value
+	 * @return empty string if n is null, string value of n otherwise
+	 */
+	@ApiMethod
+	public static String integerToString(
+			final Integer n,
+			final boolean useGrouping) {
+
+		final String str;
+		if (n != null) {
+			if (useGrouping) {
+				str = NumberFormat.getNumberInstance(Locale.US).format(n);
+			} else {
+				str = String.valueOf(n);
+			}
+		} else {
+			str = "";
+		}
+		return str;
+	}
+
+	/**
+	 * @param n
+	 *            Long value
+	 * @return empty string if n is null, string value of n otherwise
+	 */
+	@ApiMethod
+	public static String longToString(
+			final Long n,
+			final boolean useGrouping) {
+
+		final String str;
+		if (n != null) {
+			if (useGrouping) {
+				str = NumberFormat.getNumberInstance(Locale.US).format(n);
+			} else {
+				str = String.valueOf(n);
+			}
+		} else {
+			str = "";
+		}
+		return str;
+	}
+
 	@ApiMethod
 	public static String positiveByteToString(
 			final byte b) {

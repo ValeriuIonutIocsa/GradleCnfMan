@@ -26,9 +26,9 @@ abstract class AbstractCnfFile implements CnfFile {
 			Logger.printProgress("creating file:");
 			Logger.printLine(filePathString);
 
-			FactoryFolderCreator.getInstance().createParentDirectories(filePathString, true);
-			FactoryReadOnlyFlagClearer.getInstance().clearReadOnlyFlagFile(filePathString, true);
-			FactoryFileCopier.getInstance().copyFile(srcPathString, filePathString, false, true);
+			FactoryFolderCreator.getInstance().createParentDirectories(filePathString, false, true);
+			FactoryReadOnlyFlagClearer.getInstance().clearReadOnlyFlagFile(filePathString, false, true);
+			FactoryFileCopier.getInstance().copyFile(srcPathString, filePathString, false, false, true);
 
 		} catch (final Exception exc) {
 			Logger.printError("failed to create the \"" + sourceFileName + "\" file inside project:" +

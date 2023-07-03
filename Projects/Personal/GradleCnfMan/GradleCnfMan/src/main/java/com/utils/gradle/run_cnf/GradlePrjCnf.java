@@ -41,7 +41,7 @@ class GradlePrjCnf {
 
 		final String runCnfFolderPathString = PathUtils.computePath(gradlePrjPathString, "run");
 		final boolean success = FactoryFolderCreator.getInstance()
-				.createDirectories(runCnfFolderPathString, true);
+				.createDirectories(runCnfFolderPathString, false, true);
 		if (success) {
 
 			Logger.printNewLine();
@@ -90,7 +90,7 @@ class GradlePrjCnf {
 
 					Logger.printProgress("deleting Eclipse run cnf file:");
 					Logger.printLine(eclipseRunCnfFilePathString);
-					FactoryFileDeleter.getInstance().deleteFile(eclipseRunCnfFilePathString, true);
+					FactoryFileDeleter.getInstance().deleteFile(eclipseRunCnfFilePathString, false, true);
 				}
 			}
 		}

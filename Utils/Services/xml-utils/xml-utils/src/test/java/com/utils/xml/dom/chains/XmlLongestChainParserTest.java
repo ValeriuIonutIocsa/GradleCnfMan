@@ -25,10 +25,10 @@ class XmlLongestChainParserTest {
 			xmlFilePathString = "D:\\tmp\\ProjectAnalyzer\\Outputs\\BMG12_0U0_I00-symbol_types_local_5.0.24.xml";
 
 		} else if (input == 11) {
-			xmlFilePathString = "D:\\tmp\\ProjectAnalyzer\\Outputs\\FOFB4_0U0_120-symbol_types_local_5.0.24.xml";
+			xmlFilePathString = "D:\\tmp\\ProjectAnalyzer\\Outputs\\FOH02_0U0_306-symbol_types_local_5.0.24.xml";
 		} else if (input == 12) {
 			xmlFilePathString = "D:\\tmp\\ProjectAnalyzer\\TestData\\SymbolTypes\\" +
-					"FOFB4_0U0_120_Os_CounterAddRelJob_symbol_types.xml";
+					"FOH02_0U0_306_Os_CounterAddRelJob_symbol_types.xml";
 		} else {
 			throw new RuntimeException();
 		}

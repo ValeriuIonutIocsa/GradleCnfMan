@@ -50,7 +50,7 @@ public class ParserLocalIpAddresses {
 			}
 
 		} catch (final Exception exc) {
-			Logger.printLine("failed to parse PC IP addresses!");
+			Logger.printLine("failed to parse PC IP addresses");
 			Logger.printException(exc);
 		}
 	}

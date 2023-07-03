@@ -79,6 +79,7 @@ final class GradleGradleCnf {
 
 	void writeIdeaGradleCnfFile(
 			final String gradlePrjName,
+			final String gradlePrjPathString,
 			final String runCnfFolderPathString) {
 
 		final String runCnfFileName =
@@ -101,7 +102,7 @@ final class GradleGradleCnf {
 			configurationElement.setAttribute("factoryName", "Gradle");
 			configurationElement.setAttribute("folderName", gradlePrjName);
 
-			writeExternalSystemSettings(gradlePrjName, configurationElement);
+			writeExternalSystemSettings(gradlePrjPathString, configurationElement);
 
 			writeExternalSystemDebugServerProcess(configurationElement);
 			writeExternalSystemReattachDebugProcess(configurationElement);
@@ -122,14 +123,14 @@ final class GradleGradleCnf {
 	}
 
 	private void writeExternalSystemSettings(
-			final String gradlePrjName,
+			final String gradlePrjPathString,
 			final Element configurationElement) {
 
 		final Document document = configurationElement.getOwnerDocument();
 		final Element externalSystemSettingsElement = document.createElement("ExternalSystemSettings");
 
 		writeExecutionNameOption(externalSystemSettingsElement);
-		writeExternalProjectPathOption(gradlePrjName, externalSystemSettingsElement);
+		writeExternalProjectPathOption(gradlePrjPathString, externalSystemSettingsElement);
 		writeExternalSystemIdStringOption(externalSystemSettingsElement);
 		writeScriptParametersOption(externalSystemSettingsElement);
 		writeTaskDescriptionsOption(externalSystemSettingsElement);
@@ -150,13 +151,18 @@ final class GradleGradleCnf {
 	}
 
 	private static void writeExternalProjectPathOption(
-			final String gradlePrjName,
+			final String gradlePrjPathString,
 			final Element externalSystemSettingsElement) {
 
 		final Document document = externalSystemSettingsElement.getOwnerDocument();
 		final Element optionElement = document.createElement("option");
 		optionElement.setAttribute("name", "externalProjectPath");
-		optionElement.setAttribute("value", "$PROJECT_DIR$/../../" + gradlePrjName + "/" + gradlePrjName);
+
+		String gradlePrjRelativePathString = PathUtils.computeRelativePath(
+				PathUtils.computeParentPath(gradlePrjPathString, 4), gradlePrjPathString);
+		gradlePrjRelativePathString = gradlePrjRelativePathString.replace('\\', '/');
+		final String value = "$PROJECT_DIR$/../../../../" + gradlePrjRelativePathString;
+		optionElement.setAttribute("value", value);
 
 		externalSystemSettingsElement.appendChild(optionElement);
 	}

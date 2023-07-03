@@ -137,7 +137,7 @@ class GradlePrjCnf {
 		Logger.printLine(gradlePrjPathString);
 
 		for (final GradleGradleCnf gradleGradleCnf : gradleGradleCnfList) {
-			gradleGradleCnf.writeIdeaGradleCnfFile(gradlePrjName, runCnfFolderPathString);
+			gradleGradleCnf.writeIdeaGradleCnfFile(gradlePrjName, gradlePrjPathString, runCnfFolderPathString);
 		}
 
 		for (final GradleTestCnf gradleTestCnf : gradleTestCnfList) {

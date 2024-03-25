@@ -1,5 +1,6 @@
 package com.utils.gradle.run_cnf;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,8 +79,17 @@ class GradlePrjCnf {
 			testEclipseRunCnfFileNameSet.add(testEclipseRunCnfFileName);
 		}
 
-		final List<String> eclipseRunCnfFilePathStringList = ListFileUtils.listFiles(runCnfFolderPathString,
-				filePath -> filePath.toString().endsWith(".launch"));
+		final List<String> eclipseRunCnfFilePathStringList = new ArrayList<>();
+		ListFileUtils.visitFiles(runCnfFolderPathString,
+				dirPath -> {
+				},
+				filePath -> {
+
+					final String filePathString = filePath.toString();
+					if (filePathString.endsWith(".launch")) {
+						eclipseRunCnfFilePathStringList.add(filePathString);
+					}
+				});
 		for (final String eclipseRunCnfFilePathString : eclipseRunCnfFilePathStringList) {
 
 			final String eclipseRunCnfType = parseEclipseRunCnfType(eclipseRunCnfFilePathString);

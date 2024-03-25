@@ -3,6 +3,8 @@ package com.utils.io.zip;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.utils.string.StrUtils;
+
 class ZipFileExtractor7zTest {
 
 	@Test
@@ -10,7 +12,7 @@ class ZipFileExtractor7zTest {
 
 		final String zipArchiveFilePathString;
 		final String dstFolderPathString;
-		final int input = Integer.parseInt("11");
+		final int input = StrUtils.tryParsePositiveInt("11");
 		if (input == 1) {
 			zipArchiveFilePathString = "D:\\IVI_MISC\\Misc\\mnf\\test\\ChosenPictures.zip";
 			dstFolderPathString = "D:\\IVI_MISC\\Misc\\mnf\\test";

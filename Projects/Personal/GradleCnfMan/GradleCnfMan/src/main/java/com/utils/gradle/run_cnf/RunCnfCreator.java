@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,8 +20,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.utils.gradle.run_cnf.sub_prj.FactoryGradleSubProject;
-import com.utils.gradle.run_cnf.sub_prj.GradleSubProject;
+import com.personal.utils.gradle.sub_prj.FactoryGradleSubProject;
+import com.personal.utils.gradle.sub_prj.GradleSubProject;
 import com.utils.io.IoUtils;
 import com.utils.io.ListFileUtils;
 import com.utils.io.PathUtils;
@@ -42,8 +44,8 @@ public final class RunCnfCreator {
 		final String valRootPrjPathString = PathUtils.computePath(rootPrjPathString);
 		if (valRootPrjPathString != null) {
 
-			final List<GradleSubProject> gradleSubProjectList = new ArrayList<>();
-			FactoryGradleSubProject.newInstance(rootPrjPathString, gradleSubProjectList);
+			final Map<String, GradleSubProject> gradleSubProjectsByPathMap = new LinkedHashMap<>();
+			FactoryGradleSubProject.newInstance(rootPrjPathString, gradleSubProjectsByPathMap);
 
 			final JavaParser javaParser = new JavaParser();
 			final ParserConfiguration parserConfiguration = javaParser.getParserConfiguration();
@@ -55,7 +57,7 @@ public final class RunCnfCreator {
 					createGradlePrjCnf(true, rootPrjPathString, javaParser);
 			gradlePrjCnfList.add(rootGradlePrjCnf);
 
-			for (final GradleSubProject gradleSubProject : gradleSubProjectList) {
+			for (final GradleSubProject gradleSubProject : gradleSubProjectsByPathMap.values()) {
 
 				final String gradleSubProjectPathString = gradleSubProject.getPath();
 				final GradlePrjCnf gradlePrjCnf =
@@ -95,8 +97,16 @@ public final class RunCnfCreator {
 			gradlePrjCnf.fillTestIdeaRunCnfFileNameSet(testIdeaRunCnfFileNameSet);
 		}
 
-		final List<String> ideaRunCnfFilePathStringList = ListFileUtils.listFiles(runCnfFolderPathString,
-				filePath -> filePath.toString().endsWith(".xml"));
+		final List<String> ideaRunCnfFilePathStringList = new ArrayList<>();
+		ListFileUtils.visitFiles(runCnfFolderPathString,
+				dirPath -> {
+				},
+				filePath -> {
+					final String filePathString = filePath.toString();
+					if (filePathString.endsWith(".xml")) {
+						ideaRunCnfFilePathStringList.add(filePathString);
+					}
+				});
 		for (final String ideaRunCnfFilePathString : ideaRunCnfFilePathStringList) {
 
 			final String ideaRunCnfType = parseIdeaRunCnfType(ideaRunCnfFilePathString);
@@ -150,8 +160,16 @@ public final class RunCnfCreator {
 				PathUtils.computePath(gradlePrjPathString, "src", "test", "java");
 		if (IoUtils.directoryExists(testJavaFolderPathString)) {
 
-			final List<String> javaFilePathStringList = ListFileUtils.listFilesRecursively(testJavaFolderPathString,
-					filePath -> filePath.getFileName().toString().endsWith(".java"));
+			final List<String> javaFilePathStringList = new ArrayList<>();
+			ListFileUtils.visitFilesRecursively(testJavaFolderPathString,
+					dirPath -> {
+					},
+					filePath -> {
+						final String filePathString = filePath.toString();
+						if (filePathString.endsWith(".java")) {
+							javaFilePathStringList.add(filePathString);
+						}
+					});
 			for (final String javaFilePathString : javaFilePathStringList) {
 				parseJavaFile(javaFilePathString, testJavaFolderPathString, javaParser, gradleTestCnfList);
 			}

@@ -293,7 +293,7 @@ def subProjectDependencyTreeRec(final Project project, final String indent) {
             .each {
                 final ProjectDependency projectDependency = (ProjectDependency) it
                 final String subProjectName = ":${projectDependency.name}"
-                final Project subProject = project(subProjectName)
+                final Project subProject = project.project(subProjectName)
                 println indent + subProject.projectDir.absolutePath
                 subProjectDependencyTreeRec(subProject, indent + '\t')
             }
@@ -322,7 +322,7 @@ def subProjectRunConfigurationsRec(
             .each {
                 final ProjectDependency projectDependency = (ProjectDependency) it
                 final String subProjectName = ":${projectDependency.name}"
-                final Project subProject = project(subProjectName)
+                final Project subProject = project.project(subProjectName)
                 final String subProjectPathString = subProject.projectDir.absolutePath
                 if (!subProjectPathStrings.contains(subProjectPathString)) {
 

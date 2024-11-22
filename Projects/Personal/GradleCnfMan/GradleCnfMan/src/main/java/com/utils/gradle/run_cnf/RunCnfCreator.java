@@ -49,7 +49,7 @@ public final class RunCnfCreator {
 
 			final JavaParser javaParser = new JavaParser();
 			final ParserConfiguration parserConfiguration = javaParser.getParserConfiguration();
-			parserConfiguration.setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_11);
+			parserConfiguration.setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_21);
 
 			final List<GradlePrjCnf> gradlePrjCnfList = new ArrayList<>();
 

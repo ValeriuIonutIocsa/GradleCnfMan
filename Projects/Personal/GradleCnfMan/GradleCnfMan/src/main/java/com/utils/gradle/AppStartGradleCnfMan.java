@@ -36,7 +36,7 @@ final class AppStartGradleCnfMan {
 			System.exit(0);
 		}
 
-        Logger.printProgress("starting GradleCnfMan");
+		Logger.printProgress("starting GradleCnfMan");
 
 		final Map<String, String> cliArgsByNameMap = new HashMap<>();
 		CliUtils.fillCliArgsByNameMap(args, cliArgsByNameMap);
@@ -46,7 +46,7 @@ final class AppStartGradleCnfMan {
 		Logger.setDebugMode(debugMode);
 
 		final String mode = cliArgsByNameMap.get("mode");
-        Logger.printLine("mode: " + mode);
+		Logger.printLine("mode: " + mode);
 		if ("create_configurations".equals(mode)) {
 
 			final GradleCnfManSettings gradleCnfManSettings = FactoryGradleCnfManSettings.newInstance();

@@ -2,13 +2,15 @@ package com.utils.gradle.run_cnf;
 
 import org.junit.jupiter.api.Test;
 
+import com.utils.test.TestInputUtils;
+
 class RunCnfCreatorTest {
 
 	@Test
 	void testWork() {
 
 		final String rootProjectPathString;
-		final int input = Integer.parseInt("31");
+		final int input = TestInputUtils.parseTestInputNumber("1");
 		if (input == 1) {
 			rootProjectPathString =
 					"C:\\IVI\\Prog\\JavaGradle\\Scripts\\General\\GradleCnfMan\\" +

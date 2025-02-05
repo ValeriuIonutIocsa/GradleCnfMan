@@ -26,6 +26,7 @@ public final class GradleSubProjectUtils {
 			final String gradleWrapperPathString = PathUtils.computePath(projectPathString, "gradlew.bat");
 			commandList.add(gradleWrapperPathString);
 			commandList.add("subProjectDependencyTree");
+			commandList.add("--console=plain");
 
 			Logger.printProgress("executing command:");
 			Logger.printLine(StringUtils.join(commandList, " "));

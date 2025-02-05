@@ -17,7 +17,7 @@ class CliUtilsTest {
 		if (input == 1) {
 			commandString = "cmd /c \"C:\\IVI\\Vitesco\\Prog\\JavaGradle\\CRO\\" +
 					"ProjectAnalyzer\\Projects\\CRO\\SpaBackend\\SpaBackend\\" +
-					"timed_event_hook\\timed event hook script.bat\"";
+					"hook_scripts\\timed_event_hook\\timed event hook script.bat\"";
 		} else {
 			throw new RuntimeException();
 		}

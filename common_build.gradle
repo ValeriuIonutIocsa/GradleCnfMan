@@ -50,9 +50,9 @@ dependencies {
         }
     }
 
-    testFixturesImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
-    testFixturesRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
-    testFixturesRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.3'
+    testFixturesImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
+    testFixturesRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+    testFixturesRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
 
     for (String testCompileClassPath : testCompileClassPaths) {
 
@@ -67,10 +67,10 @@ dependencies {
         }
     }
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.3'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.11.4'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
 
     for (String testCompileClassPath : testCompileClassPaths) {
 
@@ -100,7 +100,7 @@ compileJava {
     dependsOn('processResources')
 }
 
-task fatJar(type: Jar, dependsOn: compileJava) {
+task fatJar(type: Jar, dependsOn: jar) {
 
     subProjectNames.each { dependsOn("${it}:fatJar") }
     onlyIf { rootDir == projectDir }
@@ -123,26 +123,20 @@ task fatJar(type: Jar, dependsOn: compileJava) {
 
     archiveClassifier.set('all')
     from {
-        final projects = createProjectAndDependenciesList(project)
-        projects.collect {
-            it.sourceSets.main.runtimeClasspath
-                    .filter {
-                        !it.name.endsWith('.jar') || !(it.absolutePath.contains('build\\libs') ||
-                                it.absolutePath.contains('build/libs'))
-                    }
-                    .collect { it.name.endsWith('.jar') ? zipTree(it) : it }
-        }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    with jar
 
+    def convertToExePropertyExists = project.hasProperty('convertToExe')
     doLast {
         new File((String) "${destDir}/.gitignore").text = '/*.jar\n/*.exe\n/*.res'
         File otherDestDir = createOtherDestDir()
         if (otherDestDir != destDir) {
             copyFile(destDir.toString(), otherDestDir.toString(), archiveFileName.get().toString())
         }
-        if (project.hasProperty('convertToExe') && convertToExe) {
+        if (convertToExePropertyExists && convertToExe) {
 
-            final File wrapperScriptFile = new File((String) "${destDir}/wrapper/Wrapper.java")
+            File wrapperScriptFile = new File((String) "${destDir}/wrapper/Wrapper.java")
             if (wrapperScriptFile.exists()) {
 
                 exec {
@@ -192,10 +186,15 @@ task sourcesJar(type: Jar) {
         attributes (manifestAttributesMap)
     }
 
+    def allProjectList = new ArrayList<>()
+    allProjectList.add(project)
+    subprojects.each {
+        subProject -> allProjectList.add(subProject)
+    }
+
     archiveClassifier.set('sources')
     from {
-        final projects = createProjectAndDependenciesList(project)
-        projects.collect { it.sourceSets.main.allSource }
+        allProjectList.collect { it.sourceSets.main.allSource }
     }
 
     doLast {
@@ -223,7 +222,7 @@ File createOtherDestDir() {
     File otherDestDir = null
     if (project.hasProperty('jarFolderPath') && jarFolderPath != null && !jarFolderPath.trim().isEmpty()) {
 
-        final File jarFolder = file(jarFolderPath)
+        File jarFolder = file(jarFolderPath)
         if (jarFolder.isDirectory()) {
             otherDestDir = jarFolder
 
@@ -254,24 +253,6 @@ def copyFile(String srcDir, String destDir, String fileName) {
             StandardCopyOption.REPLACE_EXISTING)
 }
 
-def createProjectAndDependenciesList(Project project) {
-
-    final projectAndDependencies = new LinkedHashSet<>()
-    projectAndDependencies.add(project)
-
-    project.configurations.api.dependencies
-            .findAll { dependency -> dependency instanceof ProjectDependency }
-            .each {
-                final ProjectDependency projectDependency = (ProjectDependency) it
-                Project dependencyProject = project.project(projectDependency.path)
-                Set<Project> dependencyProjectProjectAndDependencies =
-                        createProjectAndDependenciesList(dependencyProject)
-                projectAndDependencies.addAll(dependencyProjectProjectAndDependencies)
-            }
-
-    return projectAndDependencies
-}
-
 artifacts {
 
     archives fatJar
@@ -281,70 +262,24 @@ artifacts {
 task subProjectDependencyTree {
 
     subProjectNames.each { dependsOn("${it}:subProjectDependencyTree") }
-    onlyIf { rootDir == projectDir }
 
-    doLast { subProjectDependencyTreeRec(project, '') }
-}
+    def projectPathString = project.projectDir.absolutePath
 
-def subProjectDependencyTreeRec(final Project project, final String indent) {
-
-    project.configurations.api.dependencies
+    def subProjectPathStringList = new ArrayList<>()
+    configurations.api.dependencies
             .findAll { dependency -> dependency instanceof ProjectDependency }
             .each {
-                final ProjectDependency projectDependency = (ProjectDependency) it
-                final String subProjectName = ":${projectDependency.name}"
-                final Project subProject = project.project(subProjectName)
-                println indent + subProject.projectDir.absolutePath
-                subProjectDependencyTreeRec(subProject, indent + '\t')
+                ProjectDependency projectDependency = (ProjectDependency) it
+                String subProjectName = ":${projectDependency.name}"
+                Project subProject = project.project(subProjectName)
+                def subProjectPathString = subProject.projectDir.absolutePath
+                subProjectPathStringList.add(subProjectPathString)
             }
-}
-
-task subProjectRunConfigurations {
-
-    subProjectNames.each { dependsOn("${it}:subProjectRunConfigurations") }
-    onlyIf { rootDir == projectDir }
 
     doLast {
-        final String projectPathString = project.projectDir.absolutePath
-        Path runConfigurationsFolderPath = Paths.get(projectPathString, '.idea', 'runConfigurations')
-        if (!Files.isDirectory(runConfigurationsFolderPath)) {
-            Files.createDirectories(runConfigurationsFolderPath)
-        }
-        subProjectRunConfigurationsRec(project, runConfigurationsFolderPath, new HashSet<>())
+        println 'project: ' + projectPathString
+        subProjectPathStringList.each { subProjectPathString -> println 'subProject: ' + subProjectPathString }
     }
-}
-
-def subProjectRunConfigurationsRec(
-        final Project project, final Path runConfigurationsFolderPath, final Set<String> subProjectPathStrings) {
-
-    project.configurations.api.dependencies
-            .findAll { dependency -> dependency instanceof ProjectDependency }
-            .each {
-                final ProjectDependency projectDependency = (ProjectDependency) it
-                final String subProjectName = ":${projectDependency.name}"
-                final Project subProject = project.project(subProjectName)
-                final String subProjectPathString = subProject.projectDir.absolutePath
-                if (!subProjectPathStrings.contains(subProjectPathString)) {
-
-                    final Path subProjectRunConfigurationsFolderPath =
-                            Paths.get(subProjectPathString, '.idea', 'runConfigurations')
-                    if (Files.isDirectory(subProjectRunConfigurationsFolderPath)) {
-
-                        Files.list(subProjectRunConfigurationsFolderPath).forEach({
-
-                            final String fileName = it.getFileName().toString()
-                            Path destinationPath = Paths.get(runConfigurationsFolderPath.toString(), fileName)
-                            if (!Files.exists(destinationPath)) {
-
-                                println String.format('%s --> %s', it, destinationPath)
-                                Files.copy(it, destinationPath)
-                            }
-                        })
-                    }
-                    subProjectPathStrings.add(subProjectPathString)
-                }
-                subProjectRunConfigurationsRec(subProject, runConfigurationsFolderPath, subProjectPathStrings)
-            }
 }
 
 apply plugin: 'idea'
@@ -402,9 +337,9 @@ afterEvaluate {
     }
 }
 
-test.onlyIf { ! Boolean.getBoolean('skip.tests') }
-
 test {
+    onlyIf { ! Boolean.getBoolean('skip.tests') }
+
     useJUnitPlatform()
     maxHeapSize = '12g'
     outputs.upToDateWhen { false }

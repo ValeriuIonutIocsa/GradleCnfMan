@@ -37,8 +37,8 @@ public final class FactoryGradleCnfManSettings {
 
 			gradleCnfManSettings = new GradleCnfManSettings(gradleProjectRootsList);
 
-		} catch (final Exception exc) {
-			Logger.printException(exc);
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
 		}
 		return gradleCnfManSettings;
 	}

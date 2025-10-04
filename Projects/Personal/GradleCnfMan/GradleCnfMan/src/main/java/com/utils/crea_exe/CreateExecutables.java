@@ -61,7 +61,7 @@ final class CreateExecutables {
 					final Throwable throwable = record.getThrown();
 					if (throwable != null) {
 						try {
-							throwable.printStackTrace();
+							LOGGER.log(Level.SEVERE, null, throwable);
 							throwable.printStackTrace(printStream);
 						} catch (final Exception ignored) {
 						}
@@ -109,8 +109,8 @@ final class CreateExecutables {
 				final int ch = System.in.read();
 				LOGGER.info(String.valueOf((char) ch));
 
-			} catch (final Exception exc) {
-				LOGGER.log(Level.SEVERE, null, exc);
+			} catch (final Throwable throwable) {
+				LOGGER.log(Level.SEVERE, null, throwable);
 			}
 		}
 	}
@@ -124,8 +124,8 @@ final class CreateExecutables {
 					.start();
 			process.waitFor();
 
-		} catch (final Exception exc) {
-			LOGGER.log(Level.SEVERE, null, exc);
+		} catch (final Throwable throwable) {
+			LOGGER.log(Level.SEVERE, null, throwable);
 		}
 	}
 

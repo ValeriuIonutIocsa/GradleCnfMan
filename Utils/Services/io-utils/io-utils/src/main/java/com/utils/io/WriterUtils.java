@@ -50,10 +50,10 @@ public final class WriterUtils {
 			Files.write(filePath, byteArray);
 			success = true;
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write byte array to file:" +
 					System.lineSeparator() + filePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return success;
 	}
@@ -67,10 +67,10 @@ public final class WriterUtils {
 		try {
 			stringToFile(string, charset, filePathString);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write string to file:" +
 					System.lineSeparator() + filePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
@@ -122,10 +122,10 @@ public final class WriterUtils {
 				printStream.println();
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write line list to file:" +
 					System.lineSeparator() + filePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 }

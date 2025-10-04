@@ -1,9 +1,14 @@
 package com.utils.gradle.run_cnf;
 
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.lang3.Strings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.utils.io.PathUtils;
+import com.utils.io.ResourceFileUtils;
+import com.utils.io.WriterUtils;
 import com.utils.log.Logger;
 import com.utils.string.StrUtils;
 import com.utils.xml.dom.XmlDomUtils;
@@ -72,10 +77,10 @@ class GradleTestCnf {
 
 			XmlDomUtils.saveXmlFile(document, false, 4, runCnfFilePathString);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write Eclipse run cnf file:" +
 					System.lineSeparator() + eclipseRunCnfFileName);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
@@ -164,20 +169,14 @@ class GradleTestCnf {
 			Logger.printProgress("writing IntelliJ Idea test run cnf file:");
 			Logger.printLine(runCnfFilePathString);
 
-			final Document document = XmlDomUtils.createNewDocument();
-			final Element documentElement = document.createElement("component");
-			documentElement.setAttribute("name", "ProjectRunConfigurationManager");
+			String runCnfContent = ResourceFileUtils
+					.resourceFileToString("com/utils/gradle/run_cnf/intellij_run_cnf_test.xml");
 
-			final Element configurationElement = document.createElement("configuration");
-			configurationElement.setAttribute("default", Boolean.FALSE.toString());
 			final String cnfName = testClsName + "." + testMethodName;
-			configurationElement.setAttribute("name", cnfName);
-			configurationElement.setAttribute("type", "JUnit");
-			configurationElement.setAttribute("factoryName", "JUnit");
-			configurationElement.setAttribute("folderName", gradlePrjName);
-			configurationElement.setAttribute("nameIsGenerated", Boolean.TRUE.toString());
+			runCnfContent = Strings.CS.replace(runCnfContent, "@@CNF_NAME@@", cnfName);
 
-			final Element moduleElement = document.createElement("module");
+			runCnfContent = Strings.CS.replace(runCnfContent, "@@FOLDER_NAME@@", gradlePrjName);
+
 			String moduleName;
 			if (!rootPrjName.equals(gradlePrjName)) {
 				moduleName = rootPrjName + "." + gradlePrjName;
@@ -185,96 +184,27 @@ class GradleTestCnf {
 				moduleName = rootPrjName;
 			}
 			moduleName += ".test";
-			moduleElement.setAttribute("name", moduleName);
-			configurationElement.appendChild(moduleElement);
+			runCnfContent = Strings.CS.replace(runCnfContent, "@@MODULE_NAME@@", moduleName);
 
-			writeExtensionElement(document, configurationElement);
+			runCnfContent = Strings.CS.replace(runCnfContent, "@@PACKAGE_NAME@@", pkgName);
 
-			final Element pkgNameOptionElement = document.createElement("option");
-			pkgNameOptionElement.setAttribute("name", "PACKAGE_NAME");
-			pkgNameOptionElement.setAttribute("value", pkgName);
+			final String mainClassName = pkgName + "." + testClsName;
+			runCnfContent = Strings.CS.replace(runCnfContent, "@@MAIN_CLASS_NAME@@", mainClassName);
 
-			configurationElement.appendChild(pkgNameOptionElement);
+			runCnfContent = Strings.CS.replace(runCnfContent, "@@METHOD_NAME@@", testMethodName);
 
-			final Element mainClsNameOptionElement = document.createElement("option");
-			mainClsNameOptionElement.setAttribute("name", "MAIN_CLASS_NAME");
-			mainClsNameOptionElement.setAttribute("value", pkgName + "." + testClsName);
+			WriterUtils.tryStringToFile(runCnfContent, StandardCharsets.UTF_8, runCnfFilePathString);
 
-			configurationElement.appendChild(mainClsNameOptionElement);
-
-			final Element methodNameOptionElement = document.createElement("option");
-			methodNameOptionElement.setAttribute("name", "METHOD_NAME");
-			methodNameOptionElement.setAttribute("value", testMethodName);
-
-			configurationElement.appendChild(methodNameOptionElement);
-
-			final Element testObjectOptionElement = document.createElement("option");
-			testObjectOptionElement.setAttribute("name", "TEST_OBJECT");
-			testObjectOptionElement.setAttribute("value", "method");
-
-			configurationElement.appendChild(testObjectOptionElement);
-
-			writeMethodElement(configurationElement);
-
-			documentElement.appendChild(configurationElement);
-
-			document.appendChild(documentElement);
-
-			XmlDomUtils.saveXmlFile(document, true, 4, runCnfFilePathString);
-
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write Idea run cnf file:" +
 					System.lineSeparator() + runCnfFilePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
 	String createIdeaRunCnfName() {
+
 		return testClsName + "_" + testMethodName + ".xml";
-	}
-
-	private void writeExtensionElement(
-			final Document document,
-			final Element configurationElement) {
-
-		final Element extensionElement = document.createElement("extension");
-		extensionElement.setAttribute("name", "coverage");
-
-		final Element patternElement = document.createElement("pattern");
-
-		final Element patternOptionElement = document.createElement("option");
-		patternOptionElement.setAttribute("name", "PATTERN");
-		patternOptionElement.setAttribute("value", pkgName + ".*");
-
-		patternElement.appendChild(patternOptionElement);
-
-		final Element enabledOptionElement = document.createElement("option");
-		enabledOptionElement.setAttribute("name", "ENABLED");
-		enabledOptionElement.setAttribute("value", Boolean.TRUE.toString());
-
-		patternElement.appendChild(enabledOptionElement);
-
-		patternElement.appendChild(enabledOptionElement);
-
-		extensionElement.appendChild(patternElement);
-
-		configurationElement.appendChild(extensionElement);
-	}
-
-	private static void writeMethodElement(
-			final Element configurationElement) {
-
-		final Document document = configurationElement.getOwnerDocument();
-		final Element methodElement = document.createElement("method");
-		methodElement.setAttribute("v", "2");
-
-		final Element optionElement = document.createElement("option");
-		optionElement.setAttribute("name", "Make");
-		optionElement.setAttribute("enabled", Boolean.TRUE.toString());
-
-		methodElement.appendChild(optionElement);
-
-		configurationElement.appendChild(methodElement);
 	}
 
 	@Override

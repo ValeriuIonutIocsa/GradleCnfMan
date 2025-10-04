@@ -136,9 +136,9 @@ public final class RunCnfCreator {
 				ideaRunCnfType = configurationElement.getAttribute("type");
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to parse the Idea run cnf type!");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return ideaRunCnfType;
 	}
@@ -223,8 +223,8 @@ public final class RunCnfCreator {
 				}, null);
 			}
 
-		} catch (final Exception exc) {
-			Logger.printException(exc);
+		} catch (final Throwable throwable) {
+			Logger.printThrowable(throwable);
 		}
 	}
 }

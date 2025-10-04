@@ -121,9 +121,9 @@ class GradlePrjCnf {
 				}
 			}
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to parse Eclipse run cnf type!");
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 		return eclipseRunCnfType;
 	}

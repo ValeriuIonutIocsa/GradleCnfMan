@@ -12,10 +12,11 @@ class GradleTestCnfTest {
 		final String testWork = "testWork";
 		final GradleTestCnf gradleTestCnf =
 				new GradleTestCnf(pkgName, runCnfCreatorTest, testWork);
-		final String allProjects = "AllProjects";
+		final String rootPrjName = "GradleCnfManAllModules";
 		final String gradleCnfMan = "GradleCnfMan";
 		final String runCnfFolderPathString =
-				"C:\\IVI\\Conti\\Main\\Projects\\_ALL_\\AllProjects\\AllProjects\\.idea\\runConfigurations";
-		gradleTestCnf.writeIdeaRunCnfFile(allProjects, gradleCnfMan, runCnfFolderPathString);
+				"C:\\IVI\\Prog\\JavaGradle\\Scripts\\General\\GradleCnfMan\\" +
+						"Projects\\Personal\\GradleCnfManAllModules\\GradleCnfManAllModules\\.idea";
+		gradleTestCnf.writeIdeaRunCnfFile(rootPrjName, gradleCnfMan, runCnfFolderPathString);
 	}
 }

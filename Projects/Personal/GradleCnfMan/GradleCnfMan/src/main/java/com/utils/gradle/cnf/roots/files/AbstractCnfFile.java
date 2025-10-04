@@ -30,10 +30,10 @@ abstract class AbstractCnfFile implements CnfFile {
 			FactoryReadOnlyFlagClearer.getInstance().clearReadOnlyFlagFile(filePathString, false, true);
 			FactoryFileCopier.getInstance().copyFile(srcPathString, filePathString, false, false, true);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to create the \"" + sourceFileName + "\" file inside project:" +
 					System.lineSeparator() + projectFolderPathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 

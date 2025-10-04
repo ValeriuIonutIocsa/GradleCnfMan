@@ -70,10 +70,10 @@ final class GradleGradleCnf {
 
 			XmlDomUtils.saveXmlFile(document, false, 4, runCnfFilePathString);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write Idea run cnf file:" +
 					System.lineSeparator() + runCnfFilePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 
@@ -115,10 +115,10 @@ final class GradleGradleCnf {
 
 			XmlDomUtils.saveXmlFile(document, true, 4, runCnfFilePathString);
 
-		} catch (final Exception exc) {
+		} catch (final Throwable throwable) {
 			Logger.printError("failed to write Idea run cnf file:" +
 					System.lineSeparator() + runCnfFilePathString);
-			Logger.printException(exc);
+			Logger.printThrowable(throwable);
 		}
 	}
 

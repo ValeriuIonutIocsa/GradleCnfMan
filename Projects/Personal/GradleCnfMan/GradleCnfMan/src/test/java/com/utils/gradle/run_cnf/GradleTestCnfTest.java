@@ -16,7 +16,7 @@ class GradleTestCnfTest {
 		final String gradleCnfMan = "GradleCnfMan";
 		final String runCnfFolderPathString =
 				"C:\\IVI\\Prog\\JavaGradle\\Scripts\\General\\GradleCnfMan\\" +
-						"Projects\\Personal\\GradleCnfManAllModules\\GradleCnfManAllModules\\.idea";
+						"Projects\\Personal\\GradleCnfManAllModules\\GradleCnfManAllModules\\.idea\\runConfigurations";
 		gradleTestCnf.writeIdeaRunCnfFile(rootPrjName, gradleCnfMan, runCnfFolderPathString);
 	}
 }
